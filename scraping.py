@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+# 10.3.6 & 10.5.2
+# 10.5.2 - refactor the code to include functions and error handling in order to be used as part of our Flask app
 # ### Scrape Mars Data: The News
 # Separate scraping code into its own function
 
@@ -11,7 +14,7 @@ import pandas as pd
 import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
-
+# We need to connect to Mongo and establish communication between our code and the database we're using.
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
@@ -20,6 +23,8 @@ def scrape_all():
     news_title, news_paragraph = mars_news(browser)
 
     # Run all scraping functions and store results in a dictionary
+    # This dictionary does two things: It runs all of the functions we've created—featured_image(browser), for example—and it also stores all of the results.
+    # When we create the HTML template, we'll create paths to the dictionary's values, which lets us present our data on our template.
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
@@ -32,7 +37,7 @@ def scrape_all():
     browser.quit()
     return data
 
-
+# When we add the word "browser" to our function, we're telling Python that we'll be using the browser variable we defined outside the function.
 def mars_news(browser):
 
     # Scrape Mars News
@@ -58,6 +63,7 @@ def mars_news(browser):
     except AttributeError:
         return None, None
 
+    # Print title and paragraph from the function so they can be used outside of it
     return news_title, news_p
 
 
