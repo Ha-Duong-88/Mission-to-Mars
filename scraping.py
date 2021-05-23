@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
-# 10.3.6 & 10.5.2
-# 10.5.2 - refactor the code to include functions and error handling in order to be used as part of our Flask app
 # ### Scrape Mars Data: The News
 # Separate scraping code into its own function
 
@@ -14,25 +11,30 @@ import pandas as pd
 import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
-# We need to connect to Mongo and establish communication between our code and the database we're using.
+# Connect to Mongo and establish communication between our code and the database we're using.
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=True)
+    browser = Browser('chrome', **executable_path, headless=False)
+    
 
     news_title, news_paragraph = mars_news(browser)
 
     # Run all scraping functions and store results in a dictionary
-    # This dictionary does two things: It runs all of the functions we've created—featured_image(browser), for example—and it also stores all of the results.
+    # This dictionary does two things: It runs all of the functions we've created and stores all of the results.
     # When we create the HTML template, we'll create paths to the dictionary's values, which lets us present our data on our template.
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
-        "facts": mars_facts(),
+        "facts": mars_facts(), 
+        "hemispheres": mars_hemisphere(browser),
         "last_modified": dt.datetime.now()
     }
-
+    # Create a new dictionary in the data dictionary to hold a list of dictionaries with the URL string and title of each hemisphere image.
+    hemisphere = {}
+        
+        
     # Stop webdriver and return data
     browser.quit()
     return data
@@ -107,7 +109,37 @@ def mars_facts():
     df.set_index('Description', inplace=True)
 
     # Convert dataframe into HTML format, add bootstrap
-    return df.to_html(classes="table table-striped")
+    return df.to_html(classes="table table-responsive")
+
+
+# Create a function that will scrape the hemisphere data by using your code from the Mission_to_Mars_Challenge.py file.
+def mars_hemisphere(browser):
+    
+    # Scrape the Mars hemisphere data
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    # Create empty list to hold image urls and titles
+    hemisphere_image_urls = []
+
+    # Write code to retrieve the image urls and titles for each hemisphere.
+    links = browser.find_by_css('a.product-item img')
+    print(links)
+
+    for i in range(len(links)):
+        hemisphere_item = {}
+    
+        link = browser.find_by_css('a.product-item h3')[i].click()
+        sample_elem = browser.links.find_by_text('Sample').first
+        hemisphere_item["image"] = sample_elem["href"]
+        title = browser.find_by_css('h2.title')
+        hemisphere_item["title"] = title.text
+        hemisphere_image_urls.append(hemisphere_item)
+        browser.back()
+        print(hemisphere_image_urls[0])
+
+    #print(i)
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
 
