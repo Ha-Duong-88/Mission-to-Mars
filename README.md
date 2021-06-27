@@ -7,7 +7,7 @@ The objective of this project is to extract the most recently published Mars art
 This reciprocity presents a web application on Mars data including live data from NASA, Jet Propulsion Laboratory, GalaxyFacts.com, and the Astrogeology Science Center. Using DevTools to inspect the HTML elements and structure, Splinter to automate the web browser, BeautifulSoup to parse and extract HTML data, MongoDB to hold the scraped data, and Flask to present, the delivered web application includes different types of data including live text, tables, and images that can be updated with a click of a button. The Flask application also includes Bootstap components for styling and appearance.
 
 # Steps
-The following are the steps taken to design, develop and deploy the web application to present the scraped live data.
+The following were the steps taken to design, develop and deploy the web application to present the scraped live data.
 
 1) Using DevTools, examine the webpages from each website and search and pinpoint specific HTML components and data to extract.
 
